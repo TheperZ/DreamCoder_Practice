@@ -16,7 +16,11 @@ public class MemoryUserRepository implements UserRepository{
         userList.put(user.getUserId(), user);
         return user;
     }
-
+    @Override
+    public User save(Integer userId, User user) {
+        userList.put(userId, user);
+        return user;
+    }
     @Override
     public Optional<User> findById(Integer userId) {
         return Optional.ofNullable(userList.get(userId));
@@ -44,31 +48,25 @@ public class MemoryUserRepository implements UserRepository{
     @Override
     public void updateById(Integer userId, User user) {
         Optional<User> findUser = findById(userId);
-        if (findUser.isPresent()){
-            user.setUserId(findUser.get().getUserId());
-            deleteById(user.getUserId());
-            save(user);
-        }
+        user.setUserId(findUser.get().getUserId());
+        deleteById(user.getUserId());
+        save(user.getUserId(), user);
     }
 
     @Override
     public void updateByName(String userName, User user) {
         Optional<User> findUser = findByUserName(userName);
-        if (findUser.isPresent()){
-            user.setUserId(findUser.get().getUserId());
-            deleteById(user.getUserId());
-            save(user);
-        }
+        user.setUserId(findUser.get().getUserId());
+        deleteById(user.getUserId());
+        save(user.getUserId(), user);
     }
 
     @Override
     public void updateByEmail(String email, User user) {
         Optional<User> findUser = findByEmail(email);
-        if (findUser.isPresent()){
-            user.setUserId(findUser.get().getUserId());
-            deleteById(user.getUserId());
-            save(user);
-        }
+        user.setUserId(findUser.get().getUserId());
+        deleteById(user.getUserId());
+        save(user.getUserId(), user);
     }
 
     @Override
@@ -79,17 +77,13 @@ public class MemoryUserRepository implements UserRepository{
     @Override
     public void deleteByName(String userName) {
         Optional<User> findUser = findByUserName(userName);
-        if (findUser.isPresent()){
-            deleteById(findUser.get().getUserId());
-        }
+        deleteById(findUser.get().getUserId());
     }
 
     @Override
     public void deleteByEmail(String Email) {
         Optional<User> findUser = findByEmail(Email);
-        if (findUser.isPresent()){
-            deleteById(findUser.get().getUserId());
-        }
+        deleteById(findUser.get().getUserId());
     }
 
     @Override
