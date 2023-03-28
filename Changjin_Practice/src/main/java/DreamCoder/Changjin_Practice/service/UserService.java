@@ -17,21 +17,36 @@ public class UserService {
     }
 
     public User join(User user){
+        validateDuplicateUser(user);
         return userRepository.save(user);
     }
-    public Optional<User> findOne(Integer userId){
-        if (userRepository.findById(userId).isPresent())
-            return Optional.ofNullable(userRepository.findById(userId).get());
-        else
-            return Optional.empty();
+    public User findOne(Integer userId){
+        if(userRepository.findById(userId).isEmpty()){
+            throw new IllegalStateException("존재하지 않는 회원입니다.");
+        }
+        return userRepository.findById(userId).get();
     }
 
-    private void validDuplicateUser(User user){
+    public User updateOne(Integer userId, User user){
+        if(userRepository.findById(userId).isEmpty()){
+            throw new IllegalStateException("존재하지 않는 회원입니다.");
+        }
+        userRepository.updateById(userId, user);
+        return findOne(user.getUserId());
+    }
+    public String deleteOne(Integer userId){
+        if(userRepository.findById(userId).isEmpty()){
+            throw new IllegalStateException("존재하지 않는 회원입니다.");
+        }
+        userRepository.deleteById(userId);
+        return "삭제 완료";
+    }
+    private void validateDuplicateUser(User user){
         if(userRepository.findByUserName(user.getUserName()).isPresent()
                 || userRepository.findByEmail(user.getEmail()).isPresent())
         {
             throw new IllegalStateException("이미 존재하는 회원입니다.");
         }
-
     }
+
 }
